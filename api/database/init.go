@@ -4,17 +4,19 @@ import (
 	"log"
 	"time"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
 var err error
 
-type Post struct {
+type CallMsgLogs struct {
 	gorm.Model
-	Author  string
-	Message string
+	From         string
+	To           string
+	RecordingUrl string
+	Message      string
 }
 
 func addDatabase(dbname string) error {
@@ -22,8 +24,8 @@ func addDatabase(dbname string) error {
 	DB.Exec("CREATE DATABASE " + dbname)
 
 	// connect to newly created DB (now has dbname param)
-	connectionParams := "dbname=" + dbname + " user=docker password=docker sslmode=disable host=db"
-	DB, err = gorm.Open("postgres", connectionParams)
+	dsn := "dbname=" + dbname + " host=db user=docker password=docker sslmode=disable"
+	_, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return err
 	}
@@ -32,11 +34,12 @@ func addDatabase(dbname string) error {
 }
 
 func Init() (*gorm.DB, error) {
+
+	log.Println("Connecting to DB...")
 	// set up DB connection and then attempt to connect 5 times over 25 seconds
-	connectionParams := "user=docker password=docker sslmode=disable host=db"
-	log.Println("connection to DB...")
+	dsn := "host=db user=docker password=docker sslmode=disable"
 	for i := 0; i < 5; i++ {
-		DB, err = gorm.Open("postgres", connectionParams) // gorm checks Ping on Open
+		DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err == nil {
 			break
 		}
@@ -48,11 +51,11 @@ func Init() (*gorm.DB, error) {
 	}
 
 	// create table if it does not exist
-	if !DB.HasTable(&Post{}) {
-		DB.CreateTable(&Post{})
+	if !DB.Migrator().HasTable(&CallMsgLogs{}) {
+		DB.Migrator().CreateTable(&CallMsgLogs{})
 	}
 
-	testPost := Post{Author: "Dorper", Message: "GoDoRP is Dope"}
+	testPost := CallMsgLogs{From: "18918691234", To: "18918694321", RecordingUrl: "https://www.bing.com"}
 	DB.Create(&testPost)
 
 	return DB, err

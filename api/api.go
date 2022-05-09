@@ -15,7 +15,7 @@ import (
 func createPostHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	setCors(w)
 	decoder := json.NewDecoder(r.Body)
-	var newPost database.Post
+	var newPost database.CallMsgLogs
 	if err := decoder.Decode(&newPost); err != nil {
 		http.Error(w, err.Error(), 400)
 		return
@@ -33,7 +33,7 @@ func createPostHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 
 func deletePostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	setCors(w)
-	var deletedPost database.Post
+	var deletedPost database.CallMsgLogs
 	database.DB.Where("ID = ?", ps.ByName("postId")).Delete(&deletedPost) // write now this returns a blank item not the deleted item
 	res, err := json.Marshal(deletedPost)
 	if err != nil {
@@ -46,8 +46,10 @@ func deletePostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 func updatePostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	setCors(w)
 	type body struct {
-		Author  string
-		Message string
+		From         string
+		To           string
+		RecordingUrl string
+		Message      string
 	}
 	var updates body
 	decoder := json.NewDecoder(r.Body)
@@ -55,9 +57,11 @@ func updatePostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		http.Error(w, err.Error(), 400)
 	}
 
-	var updatedPost database.Post
+	var updatedPost database.CallMsgLogs
 	database.DB.Where("ID = ?", ps.ByName("postId")).First(&updatedPost)
-	updatedPost.Author = updates.Author
+	updatedPost.From = updates.From
+	updatedPost.To = updates.To
+	updatedPost.RecordingUrl = updates.RecordingUrl
 	updatedPost.Message = updates.Message
 	database.DB.Save(&updatedPost)
 	res, err := json.Marshal(updatedPost)
@@ -70,7 +74,7 @@ func updatePostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 
 func showPostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	setCors(w)
-	var post database.Post
+	var post database.CallMsgLogs
 	database.DB.Where("ID = ?", ps.ByName("postId")).First(&post)
 	res, err := json.Marshal(post)
 	if err != nil {
@@ -83,7 +87,7 @@ func showPostHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 
 func indexPostHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	setCors(w)
-	var posts []database.Post
+	var posts []database.CallMsgLogs
 	database.DB.Find(&posts)
 	res, err := json.Marshal(posts)
 	if err != nil {
@@ -126,8 +130,6 @@ func Canary(word string) string {
 }
 
 func main() {
-	defer database.DB.Close()
-
 	// add router and routes
 	router := httprouter.New()
 	router.GET("/", indexHandler)
