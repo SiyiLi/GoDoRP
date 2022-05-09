@@ -1,9 +1,11 @@
 package database
 
 import (
+	"log"
+	"time"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"time"
 )
 
 var DB *gorm.DB
@@ -32,6 +34,7 @@ func addDatabase(dbname string) error {
 func Init() (*gorm.DB, error) {
 	// set up DB connection and then attempt to connect 5 times over 25 seconds
 	connectionParams := "user=docker password=docker sslmode=disable host=db"
+	log.Println("connection to DB...")
 	for i := 0; i < 5; i++ {
 		DB, err = gorm.Open("postgres", connectionParams) // gorm checks Ping on Open
 		if err == nil {

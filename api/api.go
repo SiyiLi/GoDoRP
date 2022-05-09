@@ -1,13 +1,14 @@
 package main
 
 import (
-	"database"
+	database "api/database"
 	"encoding/json"
 	"fmt"
-	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 // CRUD Route Handlers

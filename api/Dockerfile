@@ -10,19 +10,18 @@ ENV APP_ENV $app_env
 COPY . /go/src/github.com/user/GoDoRP/api
 WORKDIR /go/src/github.com/user/GoDoRP/api
 
-# added vendor services will need to be included here
-RUN go get ./vendor/database
-
+RUN go env -w GO111MODULE=on
 RUN go get ./
 RUN go build
 
 # if dev setting will use pilu/fresh for code reloading via docker-compose volume sharing with local machine
 # if production setting will build binary
-CMD if [ ${APP_ENV} = production ]; \
+CMD if [ "${APP_ENV}" = production ]; \
 	then \
-	api; \
+	go run api; \
 	else \
 	go get github.com/pilu/fresh && \
+	go install github.com/pilu/fresh@latest &&\
 	fresh; \
 	fi
 	
