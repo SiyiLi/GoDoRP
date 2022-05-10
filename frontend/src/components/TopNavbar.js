@@ -1,20 +1,20 @@
 import React from 'react';
-import { Navbar, Nav, NavItem } from 'react-bootstrap/lib';
+import { Navbar, Nav, Container } from 'react-bootstrap';
 
-function TopNavbar() {
+const TopNavbar = () => {
   return (
-    <Navbar inverse fixedTop>
-      <Navbar.Header>
+    <Navbar expand="false">
+      <Container>
         <Navbar.Brand>
           <a href="/">GoDoRP</a>
         </Navbar.Brand>
         <Navbar.Toggle />
-      </Navbar.Header>
-      <Navbar.Collapse>
-        <Nav pullRight>
-          <NavItem href="https://github.com/McMenemy/GoDoRP">GITHUB</NavItem>
-        </Nav>
-      </Navbar.Collapse>
+        <Navbar.Collapse>
+          <Nav>
+            <Nav.Link href="https://github.com/SiyiLi/GoDoRP">GITHUB</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
     </Navbar>
   );
 }

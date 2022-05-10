@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react';
-import { Button } from 'react-bootstrap/lib';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 import axios from 'axios';
 import Urls from '../util/Urls.js';
 
@@ -46,12 +47,12 @@ class PostRow extends Component {
   makeDeleteButton() {
     const { isDeleteLoading, isDeleteDisabled } = this.state;
     if (isDeleteLoading) {
-      return <Button bsStyle="danger" disabled>Deleting...</Button>;
+      return <Button variant="danger" disabled>Deleting...</Button>;
     } else if (isDeleteDisabled) {
-      return <Button bsStyle="danger" disabled>Delete</Button>;
+      return <Button variant="danger" disabled>Delete</Button>;
     }
 
-    return <Button bsStyle="danger" onClick={this.deletePost.bind(this)}>Delete</Button>;
+    return <Button variant="danger" onClick={this.deletePost.bind(this)}>Delete</Button>;
   }
 
   makeEditButton() {
@@ -65,8 +66,10 @@ class PostRow extends Component {
     const { post } = this.props;
     return (
       <tr>
-        <td>{post.Author}</td>
+        <td>{post.From}</td>
+        <td>{post.To}</td>
         <td>{post.Message}</td>
+        <td>{post.RecordingUrl}</td>
         <td>
           {this.makeEditButton()}
           {this.makeDeleteButton()}
@@ -78,8 +81,8 @@ class PostRow extends Component {
 
 PostRow.propTypes = {
   post: PropTypes.shape({
-    Author: PropTypes.string.isRequired,
-    Message: PropTypes.string.isRequired,
+    From: PropTypes.string.isRequired,
+    To: PropTypes.string.isRequired,
     ID: PropTypes.number.isRequired,
   }),
   removePost: PropTypes.func.isRequired,

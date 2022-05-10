@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react';
-import { Table, Alert } from 'react-bootstrap/lib';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Table, Alert } from 'react-bootstrap';
 import PostRow from './PostRow';
 
 class PostBoard extends Component {
@@ -33,7 +34,7 @@ class PostBoard extends Component {
   makeError() {
     const { error } = this.state;
     if (error) {
-      return <Alert bsStyle="danger">{error}</Alert>;
+      return <Alert variant="danger">{error}</Alert>;
     }
 
     return <div />;
@@ -43,12 +44,14 @@ class PostBoard extends Component {
     return (
       <div style={{ marginTop: '10px' }}>
         {this.makeError()}
-        <Table striped bordered condensed hover>
+        <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Author</th>
+              <th>From</th>
+              <th>To</th>
               <th>Message</th>
-              <th />
+              <th>RecordingURL</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>

@@ -1,12 +1,20 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Button, Modal, FormGroup, ControlLabel, FormControl, Alert } from 'react-bootstrap/lib';
-import Urls from '../util/Urls.js';
+import { Button, Modal, FormGroup, FormLabel, FormControl, Alert } from 'react-bootstrap';
+import Urls from '../util/Urls';
 
 class CreatePostButton extends Component {
   constructor(props) {
     super(props);
-    this.state = { showModal: false, author: '', message: '', isLoading: false, errors: [] };
+    this.state = {
+      showModal: false,
+      from: '',
+      to: '',
+      msg: '',
+      url: '',
+      isLoading: false,
+      errors: [] };
   }
 
   close() {
@@ -25,29 +33,35 @@ class CreatePostButton extends Component {
 
   checkInput() {
     const errors = [];
-    if (this.state.author.length === 0) {
-      errors.push('Author cannot be blank.');
+    if (this.state.from.length === 0) {
+      errors.push('\'From\' cannot be blank.');
     }
 
-    if (this.state.message.length === 0) {
-      errors.push('Message cannot be blank.');
+    if (this.state.to.length === 0) {
+      errors.push('\'To\' cannot be blank.');
+    }
+
+    if (this.state.msg.length == 0 && this.state.url.length == 0) {
+      errors.push('\'Message\' and \'RecordingUrl\' cannot both be blank.');
     }
 
     return errors;
   }
 
   createPost() {
-    const { author, message } = this.state;
+    const { from, to, msg, url } = this.state;
     this.setState({ isLoading: true, errors: [] });
     const errors = this.checkInput();
     if (errors.length === 0) {
       axios.post(`${Urls.api}/posts`, {
-        Author: author,
-        Message: message,
+        From: from,
+        To: to,
+        Message: msg,
+        RecordingUrl: url
       })
         .then((res) => {
           this.props.addPost(res.data);
-          this.setState({ isLoading: false, author: '', message: '', showModal: false, errors: [] });
+          this.setState({ isLoading: false, from: '', to: '', msg: '', url: '', showModal: false, errors: [] });
         },
       )
         .catch((err) => {
@@ -63,7 +77,7 @@ class CreatePostButton extends Component {
     const { errors } = this.state;
     if (errors.length > 0) {
       return (
-        <Alert bsStyle="warning">
+        <Alert variant="warning">
           {this.state.errors.join('\n')}
         </Alert>
       );
@@ -76,7 +90,7 @@ class CreatePostButton extends Component {
     const { showModal, isLoading } = this.state;
     return (
       <div>
-        <Button bsStyle="primary" onClick={this.open.bind(this)}>Create Post</Button>
+        <Button variant="primary" onClick={this.open.bind(this)}>Create Post</Button>
         <Modal show={showModal} onHide={this.close.bind(this)}>
           <Modal.Header closeButton>
             <Modal.Title>Create Post</Modal.Title>
@@ -85,21 +99,39 @@ class CreatePostButton extends Component {
             {this.makeModalErrors()}
             <form>
               <FormGroup>
-                <ControlLabel>Author</ControlLabel>
+                <FormLabel>From</FormLabel>
                 <FormControl
                   type="text"
-                  value={this.state.author}
-                  placeholder="Enter author name to display"
-                  onChange={this.handleChange.bind(this, 'author')}
+                  value={this.state.from}
+                  placeholder="Enter where msg/call is from"
+                  onChange={this.handleChange.bind(this, 'from')}
                 />
               </FormGroup>
               <FormGroup>
-                <ControlLabel>Message</ControlLabel>
+                <FormLabel>To</FormLabel>
                 <FormControl
                   type="text"
-                  value={this.state.message}
-                  placeholder="Enter message to display"
-                  onChange={this.handleChange.bind(this, 'message')}
+                  value={this.state.to}
+                  placeholder="Enter where msg/call is sent to"
+                  onChange={this.handleChange.bind(this, 'to')}
+                />
+              </FormGroup>
+              <FormGroup>
+                <FormLabel>Message</FormLabel>
+                <FormControl
+                  type="text"
+                  value={this.state.msg}
+                  placeholder="Enter the message content"
+                  onChange={this.handleChange.bind(this, 'msg')}
+                />
+              </FormGroup>
+              <FormGroup>
+                <FormLabel>RecordingUrl</FormLabel>
+                <FormControl
+                  type="text"
+                  value={this.state.url}
+                  placeholder="Enter the URL of call recording"
+                  onChange={this.handleChange.bind(this, 'url')}
                 />
               </FormGroup>
             </form>

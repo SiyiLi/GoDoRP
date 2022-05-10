@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Panel } from 'react-bootstrap/lib';
-import Style from '../util/Style.js';
-import Urls from '../util/Urls.js';
-import PostBoard from './PostBoard.js';
-import CreatePostButton from './CreatePostButton.js';
-import TopNavbar from './TopNavbar.js';
+import { Card } from 'react-bootstrap';
+import Style from '../util/Style';
+import Urls from '../util/Urls';
+import PostBoard from './PostBoard';
+import CreatePostButton from './CreatePostButton';
+import TopNavbar from './TopNavbar';
 
 class App extends Component {
   constructor(props) {
@@ -17,7 +17,7 @@ class App extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getPosts();
   }
 
@@ -60,20 +60,20 @@ class App extends Component {
       width = '1127px';
     }
 
-    const panelStyle = {
+    const cardStyle = {
       width,
       margin: 'auto',
-      marginTop: '65px',
+      marginTop: '50px',
     };
 
     return (
       <div>
         <TopNavbar />
-        <Panel style={panelStyle} bsStyle="primary">
+        <Card style={cardStyle} variant="primary">
           <h2>Welcome to Your GoDoRP App</h2>
           <CreatePostButton addPost={this.addPost.bind(this)} />
           <PostBoard posts={posts} removePost={this.removePost.bind(this)} />
-        </Panel>
+        </Card>
       </div>
     );
   }
