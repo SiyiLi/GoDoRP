@@ -1,13 +1,21 @@
-# GoDoRP
-GoDoRP (Golang, Docker, React, Postgres) project starter.
-
-Disclaimer: This project is not actively supported and not recommended for production apps. Hope it serves as a learning resource.
+# GoDoRP-TwilioCallReceiver
+Display/process Twilio messages/calls based on GoDoRP (Golang, Docker, React, Postgres).
 
 ## Features
 * Start a GoDoRP project with one command on any computer with docker-compose installed
 * Dev mode features hot reloading on code changes for both the GoLang backend and React frontend (no need to rebuild containers while coding)
 * Production mode features optimized static React frontend and binary goLang backend
 * Production images built by passing a single arg option (images can then run on any computer with Docker)
+* Display messages / call recording URLs from Twilio accounts (posted by Twilio function handler) and play the recordings
+
+## Todo
+* Websocket to push message from backend to frontend
+* Play call recordings in table cell
+* CD, one cmdline to deploy to AWS EC2
+* Auth for Twilio function handler to post messages
+* Auth for users to login
+* Classify messages by users' phone numbers, only display relevant messages to a specific user
+* Beautify for mobile users
 
 ## Benefits
 * Anyone can contribute to your project locally without having to setup/install GOPATH, Postgres, node etc
@@ -22,7 +30,7 @@ Then run the following commands:
 ```bash
 $ mkdir myApp
 $ cd myApp
-$ git clone https://github.com/McMenemy/GoDoRP.git .
+$ git clone https://github.com/SiyiLi/GoDoRP-TwilioCallReceiver.
 $ docker-compose up
 ```
 Then you can open the React frontend at localhost:3000 and the RESTful GoLang API at localhost:5433

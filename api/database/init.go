@@ -55,8 +55,8 @@ func Init() (*gorm.DB, error) {
 		DB.Migrator().CreateTable(&CallMsgLogs{})
 	}
 
-	testPost := CallMsgLogs{From: "18918691234", To: "18918694321", RecordingUrl: "https://www.bing.com"}
-	DB.Create(&testPost)
+	//testPost := CallMsgLogs{From: "18918691234", To: "18918694321", RecordingUrl: "https://www.bing.com"}
+	//DB.Create(&testPost)
 
 	return DB, err
 }
